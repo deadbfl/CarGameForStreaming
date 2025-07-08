@@ -3,39 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TestInputScript : MonoBehaviour
+public class CarInput : CarEventSystem
 {
     public void OnGasPedal(InputAction.CallbackContext context)
     {
-        float inputValue = context.ReadValue<float>();
-        print(inputValue);
         if (context.performed)
         {
-            print("Pressed GasPedal");
+            car.events.GasPedal(context.ReadValue<float>());
         }
         else if (context.canceled)
         {
-            print("Canceled GasPedal");
+            car.events.GasPedal(0);
         }
     }
 
     public void OnBrakePedal(InputAction.CallbackContext context)
     {
-        float inputValue = context.ReadValue<float>();
-        print(inputValue);
         if (context.performed)
         {
-            print("Pressed BrakePedal");
+            car.events.BreakPedal(context.ReadValue<float>());
         }
         else if (context.canceled)
         {
-            print("Canceled BrakePedal");
+            car.events.BreakPedal(0);
         }
     }
 
     public void OnSteering(InputAction.CallbackContext context)
     {
-        float inputValue = context.ReadValue<float>();
-        print(inputValue);
+        if (context.performed)
+        {
+            car.events.Steering(context.ReadValue<float>());
+        }
+        else if (context.canceled)
+        {
+            car.events.Steering(0);
+        }
     }
 }
