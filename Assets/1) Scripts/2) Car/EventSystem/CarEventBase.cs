@@ -17,6 +17,9 @@ public struct CarEvents
     public event Action<float> OnBreakPedal;
     public void BreakPedal(float value) => OnBreakPedal?.Invoke(value); // Cagrildigi zaman
     
+    public event Action<float> OnClutchPedal;
+    public void ClutchPedal(float value) => OnClutchPedal?.Invoke(value);
+    
     public event Action<float> OnSteering;
     public void Steering(float value) => OnSteering?.Invoke(value);
 }

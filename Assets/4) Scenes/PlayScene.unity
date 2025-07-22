@@ -1362,6 +1362,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 24f7b2ec-cebe-4d13-82d9-c5c8b261c1b8
     m_ActionName: Car/Steering[/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1022057774}
+        m_TargetAssemblyTypeName: CarInput, Assembly-CSharp
+        m_MethodName: OnClutchPedal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5eedb0ca-9142-495c-978a-2dd125463be2
+    m_ActionName: Car/ClutchPedal[/Keyboard/q,/XboxOneGampadMacOSWireless/leftShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Car
@@ -1405,7 +1421,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   COM: {fileID: 377236717}
   downGravity: 60
-  enginePower: 15000
+  idleRPM: 1000
+  maxRPM: 8000
+  RPMMaxIncreaseAmount: 1000
+  brakeDecreaseAmount: 12000
+  frictionAmount: 300
+  engineCurrentRPM:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1.6735879
+      outSlope: -1.6735879
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.038709678
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.8621237
+      outSlope: -3.8621237
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.036559165
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gear: 3
   carAxle: 2
   wheelRadius: 0.35
   wheels:

@@ -5,15 +5,28 @@ using UnityEngine;
 
 public class CarMovement : CarEventSystem
 {
+    [Header("Physics")]
     [SerializeField] private Transform COM; // Center Of Mass => Kutle Merkezi
     [SerializeField] private float downGravity;
-    [SerializeField] private float enginePower;
+    [Header("Engine")]
+    [SerializeField] private float idleRPM;
+    [SerializeField] private float maxRPM;
+    [SerializeField] private float RPMMaxIncreaseAmount;
+    [SerializeField] private float brakeDecreaseAmount;
+    [SerializeField] private float frictionAmount;
+    [SerializeField] private AnimationCurve engineCurrentRPM;
+    [SerializeField] private int gear;
     [SerializeField] private eAxleType carAxle;
+    [Header("Wheels")]
     [SerializeField] private float wheelRadius = .35f;
     [SerializeField] private WheelInfo[] wheels;
 
     private Rigidbody rb;
-    private float moveInput;
+    private float currentRPM;
+    // Inputs
+    private float gasInput;
+    private float brakeInput;
+    private float clutchInput;
     private float steerInput;
 
     private List<int> powerWheel = new List<int>();
@@ -47,6 +60,7 @@ public class CarMovement : CarEventSystem
     {
         car.events.OnGasPedal += OnGasPedal;
         car.events.OnBreakPedal += OnBreakPedal;
+        car.events.OnClutchPedal += OnClutchPedal;
         car.events.OnSteering += OnSteering;
     }
 
@@ -54,6 +68,7 @@ public class CarMovement : CarEventSystem
     {
         car.events.OnGasPedal -= OnGasPedal;
         car.events.OnBreakPedal -= OnBreakPedal;
+        car.events.OnClutchPedal -= OnClutchPedal;
         car.events.OnSteering -= OnSteering;
     }
 
@@ -61,6 +76,26 @@ public class CarMovement : CarEventSystem
     {
         bool isAllWheelFlying = true;
         rb.centerOfMass = COM.localPosition;
+        if (gasInput > 0)
+        {
+            float RPMRate = Mathf.Clamp01(currentRPM / maxRPM);
+
+            float increaseAmountPerSecond = engineCurrentRPM.Evaluate(RPMRate) * RPMMaxIncreaseAmount;
+
+            // print($"RPM rate: {RPMRate} => increase amount: {increaseAmountPerSecond}");
+            currentRPM += gasInput * increaseAmountPerSecond * Time.fixedDeltaTime;
+        }
+
+        if (brakeInput > 0)
+        {
+            currentRPM -= brakeInput * brakeDecreaseAmount * Time.fixedDeltaTime;
+        }
+
+        if (gasInput == 0)
+            currentRPM -= frictionAmount * Time.fixedDeltaTime;
+
+        currentRPM = Mathf.Clamp(currentRPM, idleRPM, maxRPM);
+
         for (int i = 0; i < wheels.Length; i++)
         {
             Transform wheelTransform = wheels[i].transform;
@@ -90,7 +125,9 @@ public class CarMovement : CarEventSystem
                 isAllWheelFlying = false;
             }
 
-            Vector3 moveForce = moveDir * (moveInput * enginePower);
+            float wheelPower = currentRPM * (1 - clutchInput);
+            wheelPower = Mathf.Lerp(wheelPower, 0, brakeInput);
+            Vector3 moveForce = moveDir * (wheelPower * gear);
 
             if (powerWheel.Contains(i)) // Ben harekete etki ediyorsam
                 forceOnWheel += moveForce;
@@ -116,12 +153,17 @@ public class CarMovement : CarEventSystem
 
     private void OnGasPedal(float value)
     {
-        moveInput = value;
+        gasInput = value;
     }
 
     private void OnBreakPedal(float value)
     {
-        moveInput = -value;
+        brakeInput = value;
+    }
+
+    private void OnClutchPedal(float value)
+    {
+        clutchInput = value;
     }
 
     private void OnSteering(float value)

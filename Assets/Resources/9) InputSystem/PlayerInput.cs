@@ -53,6 +53,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ClutchPedal"",
+                    ""type"": ""Value"",
+                    ""id"": ""5eedb0ca-9142-495c-978a-2dd125463be2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -143,6 +152,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Steering"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3377a22-d3ad-4c53-a73d-a7c4d753f8c1"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ClutchPedal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c11b8732-0ace-4914-a73c-353e232048ae"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ClutchPedal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -154,6 +185,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Car_GasPedal = m_Car.FindAction("GasPedal", throwIfNotFound: true);
         m_Car_BrakePedal = m_Car.FindAction("BrakePedal", throwIfNotFound: true);
         m_Car_Steering = m_Car.FindAction("Steering", throwIfNotFound: true);
+        m_Car_ClutchPedal = m_Car.FindAction("ClutchPedal", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -223,6 +255,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Car_GasPedal;
     private readonly InputAction m_Car_BrakePedal;
     private readonly InputAction m_Car_Steering;
+    private readonly InputAction m_Car_ClutchPedal;
     public struct CarActions
     {
         private @PlayerInput m_Wrapper;
@@ -230,6 +263,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @GasPedal => m_Wrapper.m_Car_GasPedal;
         public InputAction @BrakePedal => m_Wrapper.m_Car_BrakePedal;
         public InputAction @Steering => m_Wrapper.m_Car_Steering;
+        public InputAction @ClutchPedal => m_Wrapper.m_Car_ClutchPedal;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -248,6 +282,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Steering.started += instance.OnSteering;
             @Steering.performed += instance.OnSteering;
             @Steering.canceled += instance.OnSteering;
+            @ClutchPedal.started += instance.OnClutchPedal;
+            @ClutchPedal.performed += instance.OnClutchPedal;
+            @ClutchPedal.canceled += instance.OnClutchPedal;
         }
 
         private void UnregisterCallbacks(ICarActions instance)
@@ -261,6 +298,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Steering.started -= instance.OnSteering;
             @Steering.performed -= instance.OnSteering;
             @Steering.canceled -= instance.OnSteering;
+            @ClutchPedal.started -= instance.OnClutchPedal;
+            @ClutchPedal.performed -= instance.OnClutchPedal;
+            @ClutchPedal.canceled -= instance.OnClutchPedal;
         }
 
         public void RemoveCallbacks(ICarActions instance)
@@ -283,5 +323,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnGasPedal(InputAction.CallbackContext context);
         void OnBrakePedal(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
+        void OnClutchPedal(InputAction.CallbackContext context);
     }
 }

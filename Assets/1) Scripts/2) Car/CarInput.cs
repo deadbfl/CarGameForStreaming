@@ -29,6 +29,19 @@ public class CarInput : CarEventSystem
         }
     }
 
+    public void OnClutchPedal(InputAction.CallbackContext context)
+    {
+        print(context.ReadValue<float>());
+        if (context.performed)
+        {
+            car.events.ClutchPedal(context.ReadValue<float>());
+        }
+        else if (context.canceled)
+        {
+            car.events.ClutchPedal(0);
+        }
+    }
+
     public void OnSteering(InputAction.CallbackContext context)
     {
         if (context.performed)
