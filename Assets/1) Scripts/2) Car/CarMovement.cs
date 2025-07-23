@@ -15,7 +15,6 @@ public class CarMovement : CarEventSystem
     [SerializeField] private float brakeDecreaseAmount;
     [SerializeField] private float frictionAmount;
     [SerializeField] private AnimationCurve engineCurrentRPM;
-    [SerializeField] private int gear;
     [SerializeField] private eAxleType carAxle;
     [Header("Wheels")]
     [SerializeField] private float wheelRadius = .35f;
@@ -28,6 +27,8 @@ public class CarMovement : CarEventSystem
     private float brakeInput;
     private float clutchInput;
     private float steerInput;
+    
+    private int gear;
 
     private List<int> powerWheel = new List<int>();
 
@@ -62,6 +63,7 @@ public class CarMovement : CarEventSystem
         car.events.OnBreakPedal += OnBreakPedal;
         car.events.OnClutchPedal += OnClutchPedal;
         car.events.OnSteering += OnSteering;
+        car.events.OnGearChanged += OnGearChanged;
     }
 
     private void OnDisable()
@@ -70,6 +72,7 @@ public class CarMovement : CarEventSystem
         car.events.OnBreakPedal -= OnBreakPedal;
         car.events.OnClutchPedal -= OnClutchPedal;
         car.events.OnSteering -= OnSteering;
+        car.events.OnGearChanged -= OnGearChanged;
     }
 
     private void FixedUpdate()
@@ -125,7 +128,7 @@ public class CarMovement : CarEventSystem
                 isAllWheelFlying = false;
             }
 
-            float wheelPower = currentRPM * (1 - clutchInput);
+            float wheelPower = currentRPM * (1 - clutchInput); // YAP : Burasi motor gucunu aktarmaci engellemsi lazim su anda duruyor
             wheelPower = Mathf.Lerp(wheelPower, 0, brakeInput);
             Vector3 moveForce = moveDir * (wheelPower * gear);
 
@@ -164,6 +167,11 @@ public class CarMovement : CarEventSystem
     private void OnClutchPedal(float value)
     {
         clutchInput = value;
+    }
+
+    private void OnGearChanged(int value)
+    {
+        gear = value;
     }
 
     private void OnSteering(float value)

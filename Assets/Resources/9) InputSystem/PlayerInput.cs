@@ -62,6 +62,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GearUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""90f1b0f5-8ce6-42b4-a234-a8f94d9306fa"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GearDown"",
+                    ""type"": ""Value"",
+                    ""id"": ""16532e7d-e3eb-4801-9a86-329665915f34"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -167,11 +185,55 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c11b8732-0ace-4914-a73c-353e232048ae"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ClutchPedal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d60f9d1a-b108-4987-b059-ae757dfc407a"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32c6d894-ead4-40d1-993f-dc87a99f6960"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""deff495f-45ff-4d06-b49b-611c1a6fe88e"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c59157f2-cdc3-4f64-a522-f0d97e0c330e"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -186,6 +248,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Car_BrakePedal = m_Car.FindAction("BrakePedal", throwIfNotFound: true);
         m_Car_Steering = m_Car.FindAction("Steering", throwIfNotFound: true);
         m_Car_ClutchPedal = m_Car.FindAction("ClutchPedal", throwIfNotFound: true);
+        m_Car_GearUp = m_Car.FindAction("GearUp", throwIfNotFound: true);
+        m_Car_GearDown = m_Car.FindAction("GearDown", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -256,6 +320,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Car_BrakePedal;
     private readonly InputAction m_Car_Steering;
     private readonly InputAction m_Car_ClutchPedal;
+    private readonly InputAction m_Car_GearUp;
+    private readonly InputAction m_Car_GearDown;
     public struct CarActions
     {
         private @PlayerInput m_Wrapper;
@@ -264,6 +330,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @BrakePedal => m_Wrapper.m_Car_BrakePedal;
         public InputAction @Steering => m_Wrapper.m_Car_Steering;
         public InputAction @ClutchPedal => m_Wrapper.m_Car_ClutchPedal;
+        public InputAction @GearUp => m_Wrapper.m_Car_GearUp;
+        public InputAction @GearDown => m_Wrapper.m_Car_GearDown;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -285,6 +353,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ClutchPedal.started += instance.OnClutchPedal;
             @ClutchPedal.performed += instance.OnClutchPedal;
             @ClutchPedal.canceled += instance.OnClutchPedal;
+            @GearUp.started += instance.OnGearUp;
+            @GearUp.performed += instance.OnGearUp;
+            @GearUp.canceled += instance.OnGearUp;
+            @GearDown.started += instance.OnGearDown;
+            @GearDown.performed += instance.OnGearDown;
+            @GearDown.canceled += instance.OnGearDown;
         }
 
         private void UnregisterCallbacks(ICarActions instance)
@@ -301,6 +375,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ClutchPedal.started -= instance.OnClutchPedal;
             @ClutchPedal.performed -= instance.OnClutchPedal;
             @ClutchPedal.canceled -= instance.OnClutchPedal;
+            @GearUp.started -= instance.OnGearUp;
+            @GearUp.performed -= instance.OnGearUp;
+            @GearUp.canceled -= instance.OnGearUp;
+            @GearDown.started -= instance.OnGearDown;
+            @GearDown.performed -= instance.OnGearDown;
+            @GearDown.canceled -= instance.OnGearDown;
         }
 
         public void RemoveCallbacks(ICarActions instance)
@@ -324,5 +404,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnBrakePedal(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
         void OnClutchPedal(InputAction.CallbackContext context);
+        void OnGearUp(InputAction.CallbackContext context);
+        void OnGearDown(InputAction.CallbackContext context);
     }
 }
