@@ -21,13 +21,13 @@ public class CarMovement : CarEventSystem
     [SerializeField] private WheelInfo[] wheels;
 
     private Rigidbody rb;
-    private float currentRPM;
+    private float flyWheelRPM;
     // Inputs
     private float gasInput;
     private float brakeInput;
     private float clutchInput;
     private float steerInput;
-    
+
     private int gear;
 
     private List<int> powerWheel = new List<int>();
@@ -81,23 +81,23 @@ public class CarMovement : CarEventSystem
         rb.centerOfMass = COM.localPosition;
         if (gasInput > 0)
         {
-            float RPMRate = Mathf.Clamp01(currentRPM / maxRPM);
+            float RPMRate = Mathf.Clamp01(flyWheelRPM / maxRPM);
 
             float increaseAmountPerSecond = engineCurrentRPM.Evaluate(RPMRate) * RPMMaxIncreaseAmount;
 
             // print($"RPM rate: {RPMRate} => increase amount: {increaseAmountPerSecond}");
-            currentRPM += gasInput * increaseAmountPerSecond * Time.fixedDeltaTime;
+            flyWheelRPM += gasInput * increaseAmountPerSecond * Time.fixedDeltaTime;
         }
 
         if (brakeInput > 0)
         {
-            currentRPM -= brakeInput * brakeDecreaseAmount * Time.fixedDeltaTime;
+            flyWheelRPM -= brakeInput * brakeDecreaseAmount * Time.fixedDeltaTime;
         }
 
         if (gasInput == 0)
-            currentRPM -= frictionAmount * Time.fixedDeltaTime;
+            flyWheelRPM -= frictionAmount * Time.fixedDeltaTime;
 
-        currentRPM = Mathf.Clamp(currentRPM, idleRPM, maxRPM);
+        flyWheelRPM = Mathf.Clamp(flyWheelRPM, idleRPM, maxRPM);
 
         for (int i = 0; i < wheels.Length; i++)
         {
@@ -128,9 +128,12 @@ public class CarMovement : CarEventSystem
                 isAllWheelFlying = false;
             }
 
-            float wheelPower = currentRPM * (1 - clutchInput); // YAP : Burasi motor gucunu aktarmaci engellemsi lazim su anda duruyor
-            wheelPower = Mathf.Lerp(wheelPower, 0, brakeInput);
-            Vector3 moveForce = moveDir * (wheelPower * gear);
+            float transmissionRPM = Mathf.Lerp(flyWheelRPM, 0, clutchInput); // Driving Pulley => Motordan gelen force
+
+            float drivenForce = transmissionRPM * Mathf.Pow(1.5f, Mathf.Abs(gear)) * Mathf.Sign(gear);
+            drivenForce = Mathf.Lerp(drivenForce, 0, brakeInput);
+
+            Vector3 moveForce = moveDir * drivenForce;
 
             if (powerWheel.Contains(i)) // Ben harekete etki ediyorsam
                 forceOnWheel += moveForce;
@@ -171,6 +174,11 @@ public class CarMovement : CarEventSystem
 
     private void OnGearChanged(int value)
     {
+        if (gear > value) // Vites Azaldi
+            flyWheelRPM += 2000;
+        else if (gear < value)
+            flyWheelRPM -= 2000;
+
         gear = value;
     }
 
@@ -194,6 +202,8 @@ public class WheelInfo
     public float suspensionRestDistance = 1;
     public float springDamper = 300;
     public float springStrength = 4000;
+
+    public float RPM { get; set; }
 }
 
 public enum eAxleType

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarGear : CarEventSystem
+public class CarTransmission : CarEventSystem
 {
     [SerializeField] private eGears currentGearType;
     [Header("Max Values")]

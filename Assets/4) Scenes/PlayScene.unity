@@ -1260,6 +1260,7 @@ GameObject:
   - component: {fileID: 1022057775}
   - component: {fileID: 1022057774}
   - component: {fileID: 1022057776}
+  - component: {fileID: 1022057778}
   - component: {fileID: 1022057773}
   - component: {fileID: 1022057777}
   m_Layer: 0
@@ -1378,6 +1379,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5eedb0ca-9142-495c-978a-2dd125463be2
     m_ActionName: Car/ClutchPedal[/Keyboard/q,/XboxOneGampadMacOSWireless/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1022057774}
+        m_TargetAssemblyTypeName: CarInput, Assembly-CSharp
+        m_MethodName: OnGearUp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 90f1b0f5-8ce6-42b4-a234-a8f94d9306fa
+    m_ActionName: Car/GearUp[/Keyboard/shift,/XboxOneGampadMacOSWireless/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1022057774}
+        m_TargetAssemblyTypeName: CarInput, Assembly-CSharp
+        m_MethodName: OnGearDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 16532e7d-e3eb-4801-9a86-329665915f34
+    m_ActionName: Car/GearDown[/Keyboard/ctrl,/XboxOneGampadMacOSWireless/leftShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Car
@@ -1450,7 +1483,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  gear: 3
   carAxle: 2
   wheelRadius: 0.35
   wheels:
@@ -1501,6 +1533,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1022057778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022057771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0309b5ebf2e764e04beefe5edbf794ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGearType: 0
+  maxGearInForward: 5
+  maxGearInReverse: -2
+  currentGearValue: 0
 --- !u!1 &1058046502
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,13 +2170,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1379663171}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1022057772}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1558790420
 GameObject:
   m_ObjectHideFlags: 0
@@ -2336,7 +2384,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 13.31}
-  m_LocalScale: {x: 100, y: 0.1, z: 126.619995}
+  m_LocalScale: {x: 1000, y: 0.1, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
