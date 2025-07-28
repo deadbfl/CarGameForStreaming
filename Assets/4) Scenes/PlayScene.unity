@@ -522,6 +522,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -662,6 +663,79 @@ MonoBehaviour:
   target: {fileID: 1379663172}
   offset: {x: 0, y: 10, z: -15}
   smoothTime: 0.12
+  rotateSpeed: 360
+  clampAngle: 30
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 873d64df0359048c3b5a89f3c1316bb6,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 00dec75a-e278-461e-966c-3bd9ab36e6c2
+    m_ActionName: Car/GasPedal[/Keyboard/w,/XboxOneGampadMacOSWireless/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6406a71a-17d8-484c-aa05-85c89a397d11
+    m_ActionName: Car/BrakePedal[/Keyboard/s,/XboxOneGampadMacOSWireless/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 24f7b2ec-cebe-4d13-82d9-c5c8b261c1b8
+    m_ActionName: Car/Steering[/Keyboard/a,/Keyboard/d,/XboxOneGampadMacOSWireless/leftStick/x]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5eedb0ca-9142-495c-978a-2dd125463be2
+    m_ActionName: Car/ClutchPedal[/Keyboard/q,/XboxOneGampadMacOSWireless/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 90f1b0f5-8ce6-42b4-a234-a8f94d9306fa
+    m_ActionName: Car/GearUp[/Keyboard/shift,/XboxOneGampadMacOSWireless/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 16532e7d-e3eb-4801-9a86-329665915f34
+    m_ActionName: Car/GearDown[/Keyboard/ctrl,/XboxOneGampadMacOSWireless/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 330585548}
+        m_TargetAssemblyTypeName: CameraMovement, Assembly-CSharp
+        m_MethodName: OnCameraRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4e755dfb-456b-4fda-ae4c-1c3beedceaea
+    m_ActionName: Camera/New action[/Mouse/delta,/XboxOneGampadMacOSWireless/rightStick]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Camera
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &377236716
 GameObject:
   m_ObjectHideFlags: 0
@@ -1411,6 +1485,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 16532e7d-e3eb-4801-9a86-329665915f34
     m_ActionName: Car/GearDown[/Keyboard/ctrl,/XboxOneGampadMacOSWireless/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4e755dfb-456b-4fda-ae4c-1c3beedceaea
+    m_ActionName: Camera/OnCameraRotate[/Mouse/delta,/XboxOneGampadMacOSWireless/rightStick]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Car
