@@ -216,6 +216,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Camera",
+            "id": "78dd3b86-af4c-4e64-a7ca-48f3861c8c43",
+            "actions": [
+                {
+                    "name": "OnCameraRotate",
+                    "type": "Value",
+                    "id": "4e755dfb-456b-4fda-ae4c-1c3beedceaea",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "20c53c4a-21fa-422e-9fbb-c2484adf332c",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnCameraRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a41bc61e-e6bf-4247-8008-901f561c8ce3",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OnCameraRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

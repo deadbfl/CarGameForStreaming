@@ -238,6 +238,45 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Camera"",
+            ""id"": ""78dd3b86-af4c-4e64-a7ca-48f3861c8c43"",
+            ""actions"": [
+                {
+                    ""name"": ""OnCameraRotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""4e755dfb-456b-4fda-ae4c-1c3beedceaea"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""20c53c4a-21fa-422e-9fbb-c2484adf332c"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OnCameraRotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a41bc61e-e6bf-4247-8008-901f561c8ce3"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OnCameraRotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -250,11 +289,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Car_ClutchPedal = m_Car.FindAction("ClutchPedal", throwIfNotFound: true);
         m_Car_GearUp = m_Car.FindAction("GearUp", throwIfNotFound: true);
         m_Car_GearDown = m_Car.FindAction("GearDown", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_OnCameraRotate = m_Camera.FindAction("OnCameraRotate", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         UnityEngine.Debug.Assert(!m_Car.enabled, "This will cause a leak and performance issues, PlayerInput.Car.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, PlayerInput.Camera.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -398,6 +441,52 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public CarActions @Car => new CarActions(this);
+
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
+    private readonly InputAction m_Camera_OnCameraRotate;
+    public struct CameraActions
+    {
+        private @PlayerInput m_Wrapper;
+        public CameraActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @OnCameraRotate => m_Wrapper.m_Camera_OnCameraRotate;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
+            @OnCameraRotate.started += instance.OnOnCameraRotate;
+            @OnCameraRotate.performed += instance.OnOnCameraRotate;
+            @OnCameraRotate.canceled += instance.OnOnCameraRotate;
+        }
+
+        private void UnregisterCallbacks(ICameraActions instance)
+        {
+            @OnCameraRotate.started -= instance.OnOnCameraRotate;
+            @OnCameraRotate.performed -= instance.OnOnCameraRotate;
+            @OnCameraRotate.canceled -= instance.OnOnCameraRotate;
+        }
+
+        public void RemoveCallbacks(ICameraActions instance)
+        {
+            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICameraActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CameraActions @Camera => new CameraActions(this);
     public interface ICarActions
     {
         void OnGasPedal(InputAction.CallbackContext context);
@@ -406,5 +495,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnClutchPedal(InputAction.CallbackContext context);
         void OnGearUp(InputAction.CallbackContext context);
         void OnGearDown(InputAction.CallbackContext context);
+    }
+    public interface ICameraActions
+    {
+        void OnOnCameraRotate(InputAction.CallbackContext context);
     }
 }
